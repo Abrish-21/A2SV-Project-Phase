@@ -34,7 +34,7 @@ func AddNewTask(ctx *gin.Context) {
 		return 
 		
 	}
-	data.AddNewTask(id,newTask)
+	data.AddNewTask(id, newTask)
 	ctx.JSON(http.StatusCreated, gin.H{ "Message:": "Task created"})
 
 }
