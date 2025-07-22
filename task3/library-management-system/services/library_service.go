@@ -4,14 +4,14 @@ import (
 	"fmt"
 )
 
-type LibraryManager interface {
+type LibraryManager interface { 
 
 	AddBook(book models.Book)
 	BorrowBook(bookID, memberID int) error 
 	RemoveBook(bookID int) 
 	ReturnBook(bookID,memberID int)  error 
 	ListAvailableBooks() []models.Book
-	ListBorrowedBooks(memberID int) []models.Book
+	ListBorrowedBooks(memberID int) []models.Book 
 }
 // this initialize the Libary contruct ot store all book and memeber
 type Library struct {

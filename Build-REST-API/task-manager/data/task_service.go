@@ -28,7 +28,7 @@ func GetTaskByID(id string) (models.Task, bool) {
 }
 
 // ADDING NEW TASK TO THE BUILT-IN DATABASE 
-func AddNewTask( id string, newTask models.Task) {
+func AddNewTask( id string , newTask models.Task) {
 	tasks = append(tasks, newTask)
 
 }

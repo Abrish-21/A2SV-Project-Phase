@@ -1,16 +1,11 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"task_manager/router"
+)
+
 func main() {
 
-	router:=  gin.Default()
-	router.GET("/pong", func(ctx *gin.Context){
-		ctx.JSON(200, gin.H{
-			"message": "pong",
-		})
-
-	})
-
-	router.Run()
-
+	r:= router.SetUpRouter()
+	r.Run(":8080")
 }
