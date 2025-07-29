@@ -11,46 +11,63 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var jwtSecret = "for testing only"
+
 // ROUTING REGISTRATION
-	func RegisterUser( ctx *gin.Context){
+	func UserRegisterController( ctx *gin.Context){
 		var user models.User
+		// bind the payload to the user struct 
 		if err := ctx.ShouldBindBodyWithJSON(&user) ; err != nil {
 			ctx.JSON(400, gin.H{
 				"message":"Invalid payload",
 			})
 			return 
 		}
-		// The registration logic
+		// check if the user is in the DB using the FInderUserService 
+		if data.FindUserService(user.Username) {
+			ctx.JSON(http.StatusConflict, gin.H{"error":"username already exisits"})
+			return 
+		}
 		
 		// handle password encryption 
 		hashedPassword,err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		
 		if err != nil {
-			ctx.JSON(500, gin.H{"messsage":"Interal server errorrrrr",})
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error" : "error hashing using bcrypt"})
 			return 
 		}
-
-		user.Password = string(hashedPassword)
-		users[user.Email] = &user
-
+		err = data.UserRegisterService(user, string(hashedPassword))
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error":"can't insert into the database"})
+			return 
+		}
 
 		ctx.JSON(200, gin.H{"message": "user registered successfullly",})
 	}
 
+	func GetUserProfileController(c *gin.Context) {
+		c.JSON(200, gin.H{"message" : "Only logged in users can see this"})
+	}
+	
+	func GetAdminPageController(c *gin.Context) {
+		c.JSON(200, gin.H{"message" : "Hello, welcome to the admin page!"})
+	}
+
 	// LOGIN LOGIC 
-	func UserLogin(ctx *gin.Context) {
-		var user User
+	func UserLoginController(ctx *gin.Context) {
+		var user models.User
 		if err := ctx.ShouldBindJSON(&user); err != nil {
 			ctx.JSON(400, gin.H{"message": "Invalid payload"})
 			return
 		}
 	
-		existingUser, ok := users[user.Email]
-		if !ok {
+		existingUser, err := data.UserLoginService(user)
+		if err !=  nil {
 			ctx.JSON(401, gin.H{"error": "Wrong email or password- E"})
 			return
 		}
-	
-		err := bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(user.Password))
+	//   check if if the password is correct or wrong  
+		err = bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(user.Password))
 		if err != nil {
 			ctx.JSON(401, gin.H{"error": "Wrong email or password- P"})
 			return     
