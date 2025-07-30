@@ -38,8 +38,9 @@ func AuthRoleMiddleWare() gin.HandlerFunc  {
 
 
 
-	var jwtSecret = []byte("for testing only")
 
+	
+var jwtSecret = [] byte("for testing only")
 func AuthMiddleWare() gin.HandlerFunc {       
 	// THE STEP  
 

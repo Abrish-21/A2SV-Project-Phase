@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"task_manager/data"
 	"task_manager/models"
@@ -12,7 +13,7 @@ import (
 )
 
 
-var jwtSecret = [] byte("for testing only")
+var jwtSecret = []byte("for testing only")
 
 // ROUTING REGISTRATION
 	func UserRegisterController( ctx *gin.Context){
@@ -81,6 +82,7 @@ var jwtSecret = [] byte("for testing only")
 	
 		tokenString, err := token.SignedString(jwtSecret)
 		if err != nil {
+			log.Printf("Token generation failed: %v", err)  // Log actual error
 			ctx.JSON(500, gin.H{"error": "Token generation failed"})
 			return
 		}

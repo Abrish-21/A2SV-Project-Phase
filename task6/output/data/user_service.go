@@ -30,7 +30,7 @@ func InitializeUserDB() error {
 
 	collection := client.Database("user_db").Collection("users")
 	// Clear previous data instances 
-	// collection.DeleteMany(context.TODO(), bson.D{{}})  
+	collection.DeleteMany(context.TODO(), bson.D{{}})  
 
 	// Assign new database into a global variable
 	UserDatabase = collection       
