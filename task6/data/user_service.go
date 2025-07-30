@@ -36,15 +36,14 @@ func InitializeUserDB() error {
 	UserDatabase = collection       
 	return nil
 }
-func FindUserService(user_name string) bool {
-	filter := bson.D{{Key: "username", Value: user_name}}
-	var temp_user models.User
-	err := UserDatabase.FindOne(context.TODO(), filter).Decode(&temp_user)
-	if err == nil { // Username already in the database 
-		return true   
-	}
-	return false  
+func FindUserService(username string)  bool {
+	filter := bson.M{"username": username}
+	var user models.User
+
+	err := UserDatabase.FindOne(context.TODO(), filter).Decode(&user)
+	return err == nil
 }
+
 
 func UserRegisterService(user models.User, hashedPass string) error {
 	// Add new user into the database
